@@ -11,31 +11,31 @@ import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ymagis.api.tools.Constantes;
 
 public class Api {
 
     private static final String baseUrl = "http://172.16.37.129/api/";
-    private static final String TEST_END_POINT = "test";
-    private static final String START_END_POINT = "start";
+    
 
     public static ResponseVO sendWithMsgBody(String methode, String msgCorps, String apiType) throws IOException {
         URL obj = new URL(baseUrl.concat(apiType));
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod(methode);
-        if (!"GET".equalsIgnoreCase(methode)) {
+        if (!Constantes.GET_METHOD.equalsIgnoreCase(methode)) {
             con.setDoOutput(true);
         }
         con.setRequestProperty("Content-Type", "application/json");
         con.setRequestProperty("Accept", "application/json");
 
         OutputStreamWriter out = null;
-        if (!"GET".equalsIgnoreCase(methode)) {
-            out = new OutputStreamWriter(con.getOutputStream(), "UTF-8");
+        if (!Constantes.GET_METHOD.equalsIgnoreCase(methode)) {
+            out = new OutputStreamWriter(con.getOutputStream(), Constantes.UTF_8);
             out.write(msgCorps);
             out.flush();
             out.close();
         }
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), Constantes.UTF_8));
         String inputLine;
         StringBuffer response = new StringBuffer();
         while ((inputLine = in.readLine()) != null) {
@@ -46,7 +46,7 @@ public class Api {
 
         in.close();
         con.disconnect();
-        return getDataFromResult(linkedHashMapFromString.toString(), "test");
+        return getDataFromResult(linkedHashMapFromString.toString(), Constantes.TEST_END_POINT);
     }
 
     /**
@@ -58,7 +58,6 @@ public class Api {
      */
     @SuppressWarnings("unchecked")
     public static Map<String, Object> getLinkedHashMapFromString(String value) throws JsonParseException, IOException {
-        // objet qui sert � convertir en java object
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(value, LinkedHashMap.class);
     }
@@ -71,13 +70,13 @@ public class Api {
         ResponseVO resultVO = null;
         String tabRep[] = response.split(",");
         if (tabRep.length > 1) {
-            if (START_END_POINT.equalsIgnoreCase(api)) {
+            if (Constantes.START_END_POINT.equalsIgnoreCase(api)) {
                 resultVO = new ResponseVO();
                 resultVO.setName(tabRep[0].split("=")[1]);
                 resultVO.setSize(tabRep[1].split("=")[1]);
                 resultVO.setIdQuiz(tabRep[2].split("=")[1].substring(0, 1));
             }
-            if (TEST_END_POINT.equalsIgnoreCase(api)) {
+            if (Constantes.TEST_END_POINT.equalsIgnoreCase(api)) {
                 resultVO = new ResponseVO();
                 resultVO.setwPlace(tabRep[0].split("=")[1]);
                 resultVO.setgPlace(tabRep[1].split("=")[1].substring(0, 1));

@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.ymagis.api.Api;
 import com.ymagis.api.ResponseVO;
+import com.ymagis.api.tools.Constantes;
 
 public class MastermindService {
 
@@ -47,23 +48,23 @@ public class MastermindService {
 	    String[] tabIndCorr = getSizeOffTabStart(size);
 		String[] t = new String[size];
 		int stop=0;
-		for (int i = 0; i <= 9; i++) {
+		for (int i = 0; i <= Constantes.MAX_NUMBER; i++) {
 			t = chargerTab(size, String.valueOf(i));
 			// appel API
-			String tabString = getStringFromTab(t);
-			ResponseVO resultVO = Api.sendWithMsgBody("POST", "{\"token\" : \"tokenmm4\",  \"result\" : \"" + tabString + "\"}", "test");
-			if (null != resultVO) {
-				Integer gPlace = Integer.parseInt(resultVO.getgPlace());
-				Integer wPlace = Integer.parseInt(resultVO.getwPlace());
+			String combinaison = getStringFromTab(t);
+			ResponseVO response = Api.sendWithMsgBody(Constantes.POST_METHOD, "{\"token\" : \"tokenmm4\",  \"result\" : \"" + combinaison + "\"}", "test");
+			if (null != response) {
+				Integer gPlace = Integer.parseInt(response.getgPlace());
+				Integer wPlace = Integer.parseInt(response.getwPlace());
 				if(gPlace > 0 || wPlace > 0 ) {
 					ok++;
 					for (int k = 0; k < size; k++) {
-						if(tabFin[k] == "*") {
+						if(tabFin[k] == Constantes.CARAC_SPEC_ETOILE) {
 							t = chargerTabStar(size, k, i, tabIndCorr);
 							// appel API
-							tabString = getStringFromTab(t);
-							resultVO = Api.sendWithMsgBody("POST","{\"token\" : \"tokenmm4\",  \"result\" : \"" + tabString + "\"}", "test");
-							gPlace = Integer.parseInt(resultVO.getgPlace());
+							combinaison = getStringFromTab(t);
+							response = Api.sendWithMsgBody(Constantes.POST_METHOD,"{\"token\" : \"tokenmm4\",  \"result\" : \"" + combinaison + "\"}", "test");
+							gPlace = Integer.parseInt(response.getgPlace());
 							if (gPlace >= 1) {
 								ok++;
 								tabFin[k] = t[k];
