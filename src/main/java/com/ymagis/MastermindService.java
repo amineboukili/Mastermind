@@ -42,7 +42,7 @@ public class MastermindService {
 	public static void getNum() throws IOException {
 		Integer ok = 0;
 		//Appel API start
-		Integer size = getSizeFormStart(); //8
+		Integer size = getSizeFormStart();
 		String[] tabFin = getSizeOffTabStart(size);
 	    String[] tabIndCorr = getSizeOffTabStart(size);
 		String[] t = new String[size];
@@ -51,27 +51,25 @@ public class MastermindService {
 			t = chargerTab(size, String.valueOf(i));
 			// appel API
 			String tabString = getStringFromTab(t);
-			ResponseVO resultVO = Api.sendWithMsgBody("POST",
-					"{\"token\" : \"tokenmm4\",  \"result\" : \"" + tabString + "\"}", "test");
-			//System.out.println(getStringFromTab(tabFin) + " -->  " + mapResult.toString());
+			ResponseVO resultVO = Api.sendWithMsgBody("POST", "{\"token\" : \"tokenmm4\",  \"result\" : \"" + tabString + "\"}", "test");
 			if (null != resultVO) {
 				Integer gPlace = Integer.parseInt(resultVO.getgPlace());
 				Integer wPlace = Integer.parseInt(resultVO.getwPlace());
 				if(gPlace > 0 || wPlace > 0 ) {
 					ok++;
 					for (int k = 0; k < size; k++) {
-						t = chargerTabStar(size, k, i, tabIndCorr);
-						// appel API
-						tabString = getStringFromTab(t);
-						resultVO = Api.sendWithMsgBody("POST",
-								"{\"token\" : \"tokenmm4\",  \"result\" : \"" + tabString + "\"}", "test");
-						//System.out.println(getStringFromTab(tabFin) + " -->  " + mapResult.toString());
-						gPlace = Integer.parseInt(resultVO.getgPlace());
-						if (gPlace >= 1) {
-							ok++;
-							tabFin[k] = t[k];
-							tabIndCorr[k] = String.valueOf(k);
-							stop++;
+						if(tabFin[k] == "*") {
+							t = chargerTabStar(size, k, i, tabIndCorr);
+							// appel API
+							tabString = getStringFromTab(t);
+							resultVO = Api.sendWithMsgBody("POST","{\"token\" : \"tokenmm4\",  \"result\" : \"" + tabString + "\"}", "test");
+							gPlace = Integer.parseInt(resultVO.getgPlace());
+							if (gPlace >= 1) {
+								ok++;
+								tabFin[k] = t[k];
+								tabIndCorr[k] = String.valueOf(k);
+								stop++;
+							}
 						}
 					}
 				}
@@ -80,8 +78,7 @@ public class MastermindService {
 				break;
 			}
 		}
-		System.out.println(getStringFromTab(tabFin));
-		//ResponseVO resultVO = Api.sendWithMsgBody("POST", "{\"token\" : \"tokenmm4\",  \"result\" : \"" + getStringFromTab(tabFin) + "\"}", "test");
+		Api.sendWithMsgBody("POST", "{\"token\" : \"tokenmm4\",  \"result\" : \"" + getStringFromTab(tabFin) + "\"}", "test");
 	}
 	
 	/**
