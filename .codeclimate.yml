@@ -1,1 +1,3 @@
-# Mastermind
+## Configuration to exclude specific files and files types
+exclude_paths:
+- target/**/*
