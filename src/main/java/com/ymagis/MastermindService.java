@@ -29,7 +29,7 @@ public class MastermindService {
 	public static Integer getSizeFormStart() throws IOException {
 		// appel start
 		Integer size = 8;
-		ResponseVO resultVO = Api.sendWithMsgBody("POST", "{\"token\" : \"tokenmm4\"}", "start");
+		ResponseVO resultVO = Api.sendWithMsgBody(Constantes.POST_METHOD, "{\"token\" : \"tokenmm4\"}", Constantes.START_END_POINT);
 		if (null != resultVO) {
 			size = Integer.parseInt(resultVO.getSize());
 		}
@@ -52,7 +52,7 @@ public class MastermindService {
 			t = chargerTab(size, String.valueOf(i));
 			// appel API
 			String combinaison = getStringFromTab(t);
-			ResponseVO response = Api.sendWithMsgBody(Constantes.POST_METHOD, "{\"token\" : \"tokenmm4\",  \"result\" : \"" + combinaison + "\"}", "test");
+			ResponseVO response = Api.sendWithMsgBody(Constantes.POST_METHOD, "{\"token\" : \"tokenmm4\",  \"result\" : \"" + combinaison + "\"}", Constantes.TEST_END_POINT);
 			if (null != response) {
 				Integer gPlace = Integer.parseInt(response.getgPlace());
 				Integer wPlace = Integer.parseInt(response.getwPlace());
@@ -63,7 +63,7 @@ public class MastermindService {
 							t = chargerTabStar(size, k, i, tabIndCorr);
 							// appel API
 							combinaison = getStringFromTab(t);
-							response = Api.sendWithMsgBody(Constantes.POST_METHOD,"{\"token\" : \"tokenmm4\",  \"result\" : \"" + combinaison + "\"}", "test");
+							response = Api.sendWithMsgBody(Constantes.POST_METHOD,"{\"token\" : \"tokenmm4\",  \"result\" : \"" + combinaison + "\"}", Constantes.TEST_END_POINT);
 							gPlace = Integer.parseInt(response.getgPlace());
 							if (gPlace >= 1) {
 								ok++;
@@ -79,7 +79,7 @@ public class MastermindService {
 				break;
 			}
 		}
-		Api.sendWithMsgBody("POST", "{\"token\" : \"tokenmm4\",  \"result\" : \"" + getStringFromTab(tabFin) + "\"}", "test");
+		Api.sendWithMsgBody(Constantes.POST_METHOD, "{\"token\" : \"tokenmm4\",  \"result\" : \"" + getStringFromTab(tabFin) + "\"}", "test");
 	}
 	
 	/**
