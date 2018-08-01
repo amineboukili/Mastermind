@@ -1,7 +1,7 @@
 package com.ymagis;
 
 import java.io.IOException;
-
+import java.util.Date;
 import com.ymagis.api.Api;
 import com.ymagis.api.ResponseVO;
 import com.ymagis.api.tools.Constantes;
@@ -14,11 +14,13 @@ public class MastermindService {
 	 */
 	public static void main(String[] args) {
 		try {
-			getNum();
+		  long debut = new Date().getTime();
+            startGame();
+          long fin = new Date().getTime();
+          System.out.println("Méthode exécutée en " + Long.toString(fin - debut) + " millisecondes");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -29,9 +31,9 @@ public class MastermindService {
 	public static Integer getSizeFormStart() throws IOException {
 		// appel start
 		Integer size = 8;
-		ResponseVO resultVO = Api.sendWithMsgBody(Constantes.POST_METHOD, "{\"token\" : \"tokenmm4\"}", Constantes.START_END_POINT);
-		if (null != resultVO) {
-			size = Integer.parseInt(resultVO.getSize());
+		ResponseVO response = Api.sendWithMsgBody(Constantes.POST_METHOD, "{\"token\" : \"tokenmm4\"}", Constantes.START_END_POINT);
+		if (null != response) {
+			size = Integer.parseInt(response.getSize());
 		}
 		return size;
 	}
@@ -40,34 +42,34 @@ public class MastermindService {
 	 * 
 	 * @throws IOException
 	 */
-	public static void getNum() throws IOException {
+	public static void startGame() throws IOException {
 		Integer ok = 0;
 		//Appel API start
 		Integer size = getSizeFormStart();
 		String[] tabFin = getSizeOffTabStart(size);
 	    String[] tabIndCorr = getSizeOffTabStart(size);
-		String[] t = new String[size];
+		String[] tempTable = new String[size];
 		int stop=0;
 		for (int i = 0; i <= Constantes.MAX_NUMBER; i++) {
-			t = chargerTab(size, String.valueOf(i));
+			tempTable = chargerTab(tempTable,size, String.valueOf(i));
 			// appel API
-			String combinaison = getStringFromTab(t);
+			String combinaison = getStringFromTab(tempTable);
 			ResponseVO response = Api.sendWithMsgBody(Constantes.POST_METHOD, "{\"token\" : \"tokenmm4\",  \"result\" : \"" + combinaison + "\"}", Constantes.TEST_END_POINT);
 			if (null != response) {
-				Integer gPlace = Integer.parseInt(response.getgPlace());
-				Integer wPlace = Integer.parseInt(response.getwPlace());
-				if(gPlace > 0 || wPlace > 0 ) {
+				Integer goodPlace = Integer.parseInt(response.getgPlace());
+				Integer wrongPlace = Integer.parseInt(response.getwPlace());
+				if(goodPlace > 0 || wrongPlace > 0 ) {
 					ok++;
 					for (int k = 0; k < size; k++) {
 						if(tabFin[k] == Constantes.CARAC_SPEC_ETOILE) {
-							t = chargerTabStar(size, k, i, tabIndCorr);
+							tempTable = chargerTabStar(tempTable,size, k, i, tabIndCorr);
 							// appel API
-							combinaison = getStringFromTab(t);
+							combinaison = getStringFromTab(tempTable);
 							response = Api.sendWithMsgBody(Constantes.POST_METHOD,"{\"token\" : \"tokenmm4\",  \"result\" : \"" + combinaison + "\"}", Constantes.TEST_END_POINT);
-							gPlace = Integer.parseInt(response.getgPlace());
-							if (gPlace >= 1) {
+							goodPlace = Integer.parseInt(response.getgPlace());
+							if (goodPlace >= 1) {
 								ok++;
-								tabFin[k] = t[k];
+								tabFin[k] = tempTable[k];
 								tabIndCorr[k] = String.valueOf(k);
 								stop++;
 							}
@@ -79,7 +81,8 @@ public class MastermindService {
 				break;
 			}
 		}
-		Api.sendWithMsgBody(Constantes.POST_METHOD, "{\"token\" : \"tokenmm4\",  \"result\" : \"" + getStringFromTab(tabFin) + "\"}", "test");
+		//System.out.println(getStringFromTab(tabFin));
+		Api.sendWithMsgBody(Constantes.POST_METHOD,"{\"token\" : \"tokenmm4\",  \"result\" : \"" + getStringFromTab(tabFin) + "\"}", Constantes.TEST_END_POINT);
 	}
 	
 	/**
@@ -90,7 +93,7 @@ public class MastermindService {
 	public static String[] getSizeOffTabStart(Integer size) {
 	    String[] tab = new String[size];
 	    for(int i=0; i<size; i++) {
-	      tab[i] = "*";
+	      tab[i] = Constantes.CARAC_SPEC_ETOILE;
 	    }
 	    return tab;
 	  }
@@ -110,12 +113,12 @@ public class MastermindService {
 
 	/**
 	 * 
+	 * @param tab
 	 * @param size
 	 * @param i
 	 * @return
 	 */
-	public static String[] chargerTab(int size, String i) {
-		String[] tab = new String[size];
+	public static String[] chargerTab(String[] tab,int size, String i) {
 		for (int j = 0; j < size; j++) {
 			tab[j] = i;
 		}
@@ -124,14 +127,14 @@ public class MastermindService {
 
 	/**
 	 * 
+	 * @param tabStar
 	 * @param size
 	 * @param indice
 	 * @param i
 	 * @param tabIndCorr
 	 * @return
 	 */
-	public static String[] chargerTabStar(int size, int indice, int i, String[] tabIndCorr) {
-		String[] tabStar = new String[size];
+	public static String[] chargerTabStar(String[] tabStar,int size, int indice, int i, String[] tabIndCorr) {
 		for (int j = 0; j < size; j++) {
 			if (j != indice) {
 				tabStar[j] = tabIndCorr[j];
@@ -141,5 +144,4 @@ public class MastermindService {
 		}
 		return tabStar;
 	}
-
 }
