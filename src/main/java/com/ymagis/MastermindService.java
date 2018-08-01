@@ -1,14 +1,16 @@
 package com.ymagis;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.ymagis.api.Api;
 import com.ymagis.api.ResponseVO;
 
 public class MastermindService {
 
+	/**
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		try {
 			getNum();
@@ -18,6 +20,11 @@ public class MastermindService {
 
 	}
 
+	/**
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	public static Integer getSizeFormStart() throws IOException {
 		// appel start
 		Integer size = 8;
@@ -28,24 +35,29 @@ public class MastermindService {
 		return size;
 	}
 
+	/**
+	 * 
+	 * @throws IOException
+	 */
 	public static void getNum() throws IOException {
 		Integer ok = 0;
-		String[] tabFin = { "*", "*", "*", "*", "*", "*", "*", "*" };
-		String[] tabIndCorr = { "*", "*", "*", "*", "*", "*", "*", "*" };
-		Map<String, Object> mapResult = new HashMap<String, Object>();
-		Integer size = 8;// getSizeFormStart();
+		//Appel API start
+		Integer size = getSizeFormStart(); //8
+		String[] tabFin = getSizeOffTabStart(size);
+	    String[] tabIndCorr = getSizeOffTabStart(size);
 		String[] t = new String[size];
-
+		int stop=0;
 		for (int i = 0; i <= 9; i++) {
 			t = chargerTab(size, String.valueOf(i));
 			// appel API
 			String tabString = getStringFromTab(t);
 			ResponseVO resultVO = Api.sendWithMsgBody("POST",
 					"{\"token\" : \"tokenmm4\",  \"result\" : \"" + tabString + "\"}", "test");
-			System.out.println(getStringFromTab(tabFin) + " -->  " + mapResult.toString());
+			//System.out.println(getStringFromTab(tabFin) + " -->  " + mapResult.toString());
 			if (null != resultVO) {
 				Integer gPlace = Integer.parseInt(resultVO.getgPlace());
-				if (gPlace >= 1) {
+				Integer wPlace = Integer.parseInt(resultVO.getwPlace());
+				if(gPlace > 0 || wPlace > 0 ) {
 					ok++;
 					for (int k = 0; k < size; k++) {
 						t = chargerTabStar(size, k, i, tabIndCorr);
@@ -53,20 +65,37 @@ public class MastermindService {
 						tabString = getStringFromTab(t);
 						resultVO = Api.sendWithMsgBody("POST",
 								"{\"token\" : \"tokenmm4\",  \"result\" : \"" + tabString + "\"}", "test");
-						System.out.println(getStringFromTab(tabFin) + " -->  " + mapResult.toString());
+						//System.out.println(getStringFromTab(tabFin) + " -->  " + mapResult.toString());
 						gPlace = Integer.parseInt(resultVO.getgPlace());
 						if (gPlace >= 1) {
 							ok++;
 							tabFin[k] = t[k];
 							tabIndCorr[k] = String.valueOf(k);
-
+							stop++;
 						}
 					}
 				}
 			}
+			if(stop==size) {
+				break;
+			}
 		}
 		System.out.println(getStringFromTab(tabFin));
+		//ResponseVO resultVO = Api.sendWithMsgBody("POST", "{\"token\" : \"tokenmm4\",  \"result\" : \"" + getStringFromTab(tabFin) + "\"}", "test");
 	}
+	
+	/**
+	 * 
+	 * @param size
+	 * @return
+	 */
+	public static String[] getSizeOffTabStart(Integer size) {
+	    String[] tab = new String[size];
+	    for(int i=0; i<size; i++) {
+	      tab[i] = "*";
+	    }
+	    return tab;
+	  }
 
 	/**
 	 * 
