@@ -14,24 +14,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Api {
 
-    public static void main(String[] args) {
-        // try {
-        // //Map<String, Object> mapResult = new
-        // Api().sendWithMsgBody("http://172.16.37.129/api/test", "POST", "{\"token\" :
-        // \"tokenmm4\", \"result\" : \"11111\"}");
-        // //Map<String, Object> mapResult = new
-        // ClasseMain().sendWithMsgBody("http://172.16.37.129/api/start", "POST",
-        // "{\"token\" : \"tokenmm4\"}");
-        //// System.out.println(mapResult.toString());
-        //// ResponseVO resultVO = getDataFromResult(mapResult.toString(), "test");
-        // //resultVO resultVO = getDataFromResult(mapResult.toString(), "start");
-        //
-        // } catch (IOException e) {
-        // e.printStackTrace();
-        // }
-
-    }
-
     private static final String baseUrl = "http://172.16.37.129/api/";
     private static final String TEST_END_POINT = "test";
     private static final String START_END_POINT = "start";
