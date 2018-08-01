@@ -66,9 +66,9 @@ public class MastermindService {
                 // positions des chiffres deja trouvees
                 for (int i = 0; i < k; i++) {
                     if (combiTrouve[i] == 0)
-                        combiTente[i] = coul;
+                        combiTente[i] = coul; //Remplir la case non avec le prochain chiffre
                     else
-                        combiTente[i] = combiTrouve[i];
+                        combiTente[i] = combiTrouve[i]; // Il faut tjrs garder le chiffre bien place dans sa position
                 }
                 String combiTenteFound = "";
                 for (int i = 0; i < combiTente.length; i++) {
@@ -77,7 +77,7 @@ public class MastermindService {
                 ResponseVO resultVO =  Api.sendWithMsgBody("POST", "{\"token\" : \"tokenmm4\",  \"result\" : \"" + combiTenteFound + "\"}", "test");
                 nbBienPlace = Integer.parseInt(resultVO.getgPlace());
                 nbMalPlace = 0;
-                // On determine le nombre de bien places et mal places
+                // On determine le nombre des chiffres bien places
                 if (showResult)
                     displayCombinationDetected(combiTente, nbBienPlace, nbMalPlace);
                 int nbChiffres = nbBienPlace - nbTrouve;
@@ -91,7 +91,7 @@ public class MastermindService {
                         pos = 0;
                         // tant que nbMalPlace != 0 faire
                         while (nbMalPlace > 0) {
-                            while ((pos < k) && combiTrouve[pos] != 0)
+                            while ((pos < k) && combiTrouve[pos] != 0) // chercher la position disponible #0
                                 pos++;
                             // On cree la nouvelle combinaison a tente, qui cherche
                             // la position exacte du chiffre en cour. Tout en tenant compte des positions des chiffres deja trouvees

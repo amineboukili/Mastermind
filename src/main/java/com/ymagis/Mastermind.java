@@ -14,8 +14,12 @@ public class Mastermind {
 
     public static void main(String[] args) {
         try {
+        	int nbrCase = 8;
             ResponseVO responseVO = Api.sendWithMsgBody("POST","{\"token\" : \"tokenmm4\"}","start");
-            int nbrCase = null != responseVO ? Integer.parseInt(responseVO.getSize()) : 5;
+            if(null != responseVO) {
+            	String size = responseVO.getSize();
+            	nbrCase = Integer.parseInt(size);
+            }
             Mastermind mastermind = new Mastermind(9, nbrCase);
             mastermind.startGame();
         } catch (Exception e) {
