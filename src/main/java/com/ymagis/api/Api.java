@@ -15,7 +15,8 @@ import com.ymagis.api.tools.Constantes;
 
 public class Api {
 
-    private static final String baseUrl = "http://172.16.37.129/api/";
+    //private static final String baseUrl = "http://172.16.37.129/api/";
+    private static final String baseUrl = "http://192.168.0.100:8000/api/";
     
 
     public static ResponseVO sendWithMsgBody(String methode, String msgCorps, String apiType) throws IOException {

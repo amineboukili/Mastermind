@@ -49,9 +49,10 @@ public class MastermindService {
 		String[] tabFin = getSizeOffTabStart(size);
 	    String[] tabIndCorr = getSizeOffTabStart(size);
 		String[] tempTable = new String[size];
+		String[] tabAlNum= Constantes.TAB_ALFA_NUM;
 		int stop=0;
-		for (int i = 0; i <= Constantes.MAX_NUMBER; i++) {
-			tempTable = chargerTab(tempTable,size, String.valueOf(i));
+		for (int i = 0; i < tabAlNum.length; i++) {
+			tempTable = chargerTab(tempTable,size, tabAlNum[i]);
 			// appel API
 			String combinaison = getStringFromTab(tempTable);
 			ResponseVO response = Api.sendWithMsgBody(Constantes.POST_METHOD, "{\"token\" : \"tokenmm4\",  \"result\" : \"" + combinaison + "\"}", Constantes.TEST_END_POINT);
@@ -62,7 +63,7 @@ public class MastermindService {
 					ok++;
 					for (int k = 0; k < size; k++) {
 						if(tabFin[k] == Constantes.CARAC_SPEC_ETOILE) {
-							tempTable = chargerTabStar(tempTable,size, k, i, tabIndCorr);
+							tempTable = chargerTabStar(tempTable,size, k, tabAlNum[i], tabIndCorr);
 							// appel API
 							combinaison = getStringFromTab(tempTable);
 							response = Api.sendWithMsgBody(Constantes.POST_METHOD,"{\"token\" : \"tokenmm4\",  \"result\" : \"" + combinaison + "\"}", Constantes.TEST_END_POINT);
@@ -73,7 +74,13 @@ public class MastermindService {
 								tabIndCorr[k] = String.valueOf(k);
 								stop++;
 								System.out.println(getStringFromTab(tabFin));
+								
+								/*if(goodPlace == 1)
+								break;*/
 							}
+							
+								
+							
 						}
 					}
 				}
@@ -83,7 +90,7 @@ public class MastermindService {
 			}
 		}
 		System.out.println(getStringFromTab(tabFin));
-		//Api.sendWithMsgBody(Constantes.POST_METHOD,"{\"token\" : \"tokenmm4\",  \"result\" : \"" + getStringFromTab(tabFin) + "\"}", Constantes.TEST_END_POINT);
+		Api.sendWithMsgBody(Constantes.POST_METHOD,"{\"token\" : \"tokenmm4\",  \"result\" : \"" + getStringFromTab(tabFin) + "\"}", Constantes.TEST_END_POINT);
 	}
 	
 	/**
@@ -135,13 +142,15 @@ public class MastermindService {
 	 * @param tabIndCorr
 	 * @return
 	 */
-	public static String[] chargerTabStar(String[] tabStar,int size, int indice, int i, String[] tabIndCorr) {
+	public static String[] chargerTabStar(String[] tabStar,int size, int indice, String i, String[] tabIndCorr) {
 		for (int j = 0; j < size; j++) {
 			if (j != indice) {
 				tabStar[j] = "*";
-			} else {
-				tabStar[j] = String.valueOf(i);
-			}
+			} else 
+				{
+				tabStar[j] = i;
+				}
+			
 		}
 		return tabStar;
 	}
