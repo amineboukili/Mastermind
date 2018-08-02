@@ -30,7 +30,7 @@ public class MastermindService {
 	 */
 	public static Integer getSizeFormStart() throws IOException {
 		// appel start
-		Integer size = 8;
+		Integer size = 28;
 		ResponseVO response = Api.sendWithMsgBody(Constantes.POST_METHOD, "{\"token\" : \"tokenmm4\"}", Constantes.START_END_POINT);
 		if (null != response) {
 			size = Integer.parseInt(response.getSize());
@@ -72,6 +72,7 @@ public class MastermindService {
 								tabFin[k] = tempTable[k];
 								tabIndCorr[k] = String.valueOf(k);
 								stop++;
+								System.out.println(getStringFromTab(tabFin));
 							}
 						}
 					}
@@ -82,7 +83,7 @@ public class MastermindService {
 			}
 		}
 		System.out.println(getStringFromTab(tabFin));
-		Api.sendWithMsgBody(Constantes.POST_METHOD,"{\"token\" : \"tokenmm4\",  \"result\" : \"" + getStringFromTab(tabFin) + "\"}", Constantes.TEST_END_POINT);
+		//Api.sendWithMsgBody(Constantes.POST_METHOD,"{\"token\" : \"tokenmm4\",  \"result\" : \"" + getStringFromTab(tabFin) + "\"}", Constantes.TEST_END_POINT);
 	}
 	
 	/**
@@ -137,7 +138,7 @@ public class MastermindService {
 	public static String[] chargerTabStar(String[] tabStar,int size, int indice, int i, String[] tabIndCorr) {
 		for (int j = 0; j < size; j++) {
 			if (j != indice) {
-				tabStar[j] = tabIndCorr[j];
+				tabStar[j] = "*";
 			} else {
 				tabStar[j] = String.valueOf(i);
 			}

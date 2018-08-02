@@ -78,8 +78,8 @@ public class Api {
             }
             if (Constantes.TEST_END_POINT.equalsIgnoreCase(api)) {
                 resultVO = new ResponseVO();
-                resultVO.setwPlace(tabRep[0].split("=")[1]);
-                resultVO.setgPlace(tabRep[1].split("=")[1].substring(0, 1));
+                resultVO.setwPlace(tabRep[1].split("=")[1].substring(0, 1));
+                resultVO.setgPlace(tabRep[0].split("=")[1].substring(0, 1));
             }
         }
         return resultVO;
