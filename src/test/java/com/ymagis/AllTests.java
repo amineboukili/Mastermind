@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({chargerTabStarTest.class, getSizeFormStartTest.class, getSizeOffTabStartTest.class})
+@SuiteClasses({chargerTabStarTest.class, getSizeFormStartTest.class, getSizeOffTabStartTest.class, chargerTabTest.class, getStringFromTabTest.class})
 public class AllTests {
 
 }

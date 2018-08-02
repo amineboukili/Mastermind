@@ -46,7 +46,7 @@ public class Api {
 
         in.close();
         con.disconnect();
-        return getDataFromResult(linkedHashMapFromString.toString(), Constantes.TEST_END_POINT);
+        return getDataFromResult(linkedHashMapFromString.toString(), apiType);
     }
 
     /**

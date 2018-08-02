@@ -81,7 +81,7 @@ public class MastermindService {
 				break;
 			}
 		}
-		//System.out.println(getStringFromTab(tabFin));
+		System.out.println(getStringFromTab(tabFin));
 		Api.sendWithMsgBody(Constantes.POST_METHOD,"{\"token\" : \"tokenmm4\",  \"result\" : \"" + getStringFromTab(tabFin) + "\"}", Constantes.TEST_END_POINT);
 	}
 	
